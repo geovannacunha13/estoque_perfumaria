@@ -16,6 +16,8 @@ Bem-vindo ao sistema Perfumaria! Este sistema permite o gerenciamento de produto
 - Python instalado.
 - PostgreSQL instalado.
 - Ambiente virtual ativado.
+- Flask instalado: pip install flask
+- psycopg2 instalado: pip install psycopg2
 
 ### Configuração do Banco de Dados
 
