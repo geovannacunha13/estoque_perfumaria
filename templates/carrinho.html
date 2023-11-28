@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+
+    <!-- Font Awesome -->
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet" />
+
+    <!-- Responsive styles -->
+    <link href="{{ url_for('static', filename='css/responsive.css') }}" rel="stylesheet" />
+</head>
+
+<body class="d-flex flex-column">
+
+
+  <div class="container mt-5">
+    <h1 class="mb-4">Carrinho de Compras</h1>
+
+    <div class="row">
+      <div class="col-md-8">
+          <!-- Lista de Produtos no Carrinho -->
+          {% for produto in produtos_carrinho %}
+              <div class="card mb-3">
+                  <div class="card-body">
+                      <h5 class="card-title">{{ produto['nome'] }}</h5>
+                      <form class="mb-3" action="/atualizar-quantidade" method="POST">
+                        <label for="quantidade">Quantidade:</label>
+                        <input type="number" id="quantidade" name="quantidade" value="{{ produto['quantidade'] }}" min="1">
+                        <input type="hidden" name="produto_id" value="{{ produto['idperfumaria'] }}">
+                        <button type="submit" class="btn btn-sm btn-primary">Atualizar</button>
+                      </form>
+                      <p class="card-text">Preço Unitário: R$ {{ produto['preco'] }}</p>
+                      <p class="card-text">Preço Total: R$ {{ produto['preco_total'] }}</p>
+                      <form action="/remover-do-carrinho" method="POST">
+                          <input type="hidden" name="produto_id" value="{{ produto['idperfumaria'] }}">
+                          <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+                      </form>
+                  </div>
+              </div>
+          {% endfor %}
+      </div>
+
+      <div class="col-md-4">
+          <!-- Detalhes do Carrinho -->
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">Detalhes do Carrinho</h5>
+                  <p class="card-text">Nome do Motoboy: Paulo</p>
+                  <p class="card-text">Total: R$ {{ total }}</p>
+                  
+                  <!-- Formulário para informar o endereço -->
+                  <form action="/finalizar-compra" method="POST">
+                      <div class="mb-3">
+                          <label for="endereco" class="form-label">Endereço de Entrega:</label>
+                          <input type="text" class="form-control" id="endereco" name="endereco" required>
+                      </div>
+                        <!-- Seletor de Forma de Pagamento -->
+                        <div class="mb-3">
+                          <label for="forma-pagamento" class="form-label">Forma de Pagamento:</label>
+                          <select class="custom-select" id="forma-pagamento" name="forma_pagamento" required>
+                              {% for opcao in opcoes_pagamento %}
+                                  <option value="{{ opcao }}">{{ opcao }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Finalizar Compra</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+ <!-- jQery -->
+ <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+ <!-- popper js -->
+ <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+ <!-- bootstrap js -->
+ <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+ <!-- custom js -->
+ <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+</body>
+</html>

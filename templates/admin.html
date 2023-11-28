@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+
+    <!-- Font Awesome -->
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet" />
+
+    <!-- Responsive styles -->
+    <link href="{{ url_for('static', filename='css/responsive.css') }}" rel="stylesheet" />
+</head>
+
+<body class="d-flex flex-column">
+
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0" href="#">Dashboard</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
+            data-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar custom-nav">
+                <div class="sidebar-sticky d-flex flex-column">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="mostrarConteudo('perfumes')">
+                                <i class="fa fa-flask"></i>
+                                Perfumes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="mostrarConteudo('clientes')">
+                                <i class="fa fa-users"></i>
+                                Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="mostrarConteudo('pedidos')">
+                                <i class="fa fa-shopping-cart"></i>
+                                Pedidos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="mostrarConteudo('pagamento')">
+                                <i class="fa fa-credit-card"></i>
+                                Forma de Pagamento
+                            </a>
+                        </li>
+                        <!-- Adicione mais links para outras seções aqui -->
+                    </ul>
+                    <div class="mt-auto"></div>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+                <div id="conteudo-perfumes" style="display:none;">
+                    <div class="container mt-5">
+
+                        <!-- Abas (Tabs) -->
+                        <ul class="nav nav-tabs" id="perfumesTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="cadastroPerfume-tab" data-toggle="tab" href="#cadastroPerfume" role="tab" aria-controls="cadastroPerfume"
+                                    aria-selected="true">Cadastro</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="listaPerfume-tab" data-toggle="tab" href="#listaPerfume" role="tab" aria-controls="listaPerfume"
+                                    aria-selected="false">Lista</a>
+                            </li>
+                        </ul>
+
+                        <!-- Conteúdo das Abas -->
+                        <div class="tab-content mt-2">
+                            <!-- Aba de Cadastro -->
+                            <div class="tab-pane fade show active" id="cadastroPerfume" role="tabpanel" aria-labelledby="cadastroPerfume-tab">
+
+                            {% if alert_message_perfume %}
+                                <div class="alert alert-{{ alert_type_perfume }} alert-dismissible fade show" role="alert">
+                                    {{ alert_message_perfume }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+
+                                <form method="post" enctype="multipart/form-data">
+                                  <div class="form-group">
+                                      <label for="nomePerfume">Nome do Perfume</label>
+                                      <input type="text" class="form-control" id="nomePerfume" placeholder="Digite o nome do perfume" name="nome_perfume">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="quantidade">Quantidade</label>
+                                      <input type="text" class="form-control" id="quantidade" placeholder="Digite a quantidade" name="quantidade">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="preco">Preço</label>
+                                      <input type="text" class="form-control" id="preco" placeholder="Digite o preço" name="preco">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="imagemPerfume">Imagem do Perfume</label>
+                                      <input type="file" class="form-control-file" id="imagemPerfume" accept="image/*" name="imagem_perfume">
+                                  </div>
+                                  <button type="submit" class="btn btn-primary">Cadastrar</button>
+                              </form>
+
+                            </div>
+
+                            <!-- Aba de Lista -->
+                            <div class="tab-pane fade" id="listaPerfume" role="tabpanel" aria-labelledby="listaPerfume-tab">
+                                <!-- Tabela de Lista de Perfumes -->
+                                
+                                <table class="table mt-3">
+                                  <thead>
+                                      <tr>
+                                          <th>ID</th>
+                                          <th>Nome do Perfume</th>
+                                          <th>Quantidade</th>
+                                          <th>Preço</th>
+                                          <th>Ações</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <!-- Exemplo de uma linha na tabela (pode ter mais linhas) -->
+                                      {% for perfume in perfumes %}
+                                        <tr>
+                                            <td>{{ perfume[0] }}</td>
+                                            <td>{{ perfume[1] }}</td>
+                                            <td>{{ perfume[2] }}</td>
+                                            <td>R${{ '{:,.2f}'.format(perfume[3]) }}</td>
+                                            <td>
+                                                <a href="/delete/{{perfume[0]}}" class="btn btn-danger btn-delete btn-sm">Deletar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                  </tbody>
+                              </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="conteudo-clientes" style="display:none;">
+                    <h2>Clientes</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Email</th>
+                                <th>Celular</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in clientes %}
+                                <tr>
+                                    <td>{{ cliente[0]}}</td>
+                                    <td>{{ cliente[3]}}</td>
+                                    <td>{{ cliente[2] }}</td>
+                                    <td>{{ cliente[4] }}</td>
+                                    <td>{{ cliente[2] }}</td>
+                                    
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+
+                <div id="conteudo-pedidos" style="display:none;">
+                    <h2>Conteúdo de Pedidos</h2>
+                    <p>Aqui está o conteúdo relacionado a Pedidos.</p>
+                </div>
+
+                <div id="conteudo-pagamento" style="display:none;">
+                    <div class="container mt-5">
+
+                        <!-- Abas (Tabs) -->
+                        <ul class="nav nav-tabs" id="pagamentoTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="cadastroPagamento-tab" data-toggle="tab" href="#cadastroPagamento" role="tab" aria-controls="cadastroPagamento"
+                                    aria-selected="true">Cadastro</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="listaPagamento-tab" data-toggle="tab" href="#listaPagamento" role="tab" aria-controls="listaPagamento"
+                                    aria-selected="false">Lista</a>
+                            </li>
+                        </ul>
+
+                        <!-- Conteúdo das Abas -->
+                        <div class="tab-content mt-2">
+                            <!-- Aba de Cadastro -->
+                            <div class="tab-pane fade show active" id="cadastroPagamento" role="tabpanel" aria-labelledby="cadastroPagamento-tab">
+                                <!-- Formulário de Cadastro de Forma de Pagamento -->
+                          
+                            {% if 'deletion_success' in session %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    Item deletado com sucesso!
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% set _ = session.pop('deletion_success', None) %}
+                            {% endif %}
+
+                            {% if alert_message %}
+                                <div class="alert alert-{{ alert_type }} alert-dismissible fade show" role="alert">
+                                    {{ alert_message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+
+                            <form method="post">
+                                  <div class="form-group">
+                                      <label for="tipoPagamento">Tipo pagamento</label>
+                                      <input type="text" class="form-control" id="tipoPagamento" placeholder="Digite a forma de pagamento" name="tipo_pagamento" required>
+                                  </div>
+                                  <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </form>
+                            </div>
+
+                            <!-- Aba de Lista -->
+                            <div class="tab-pane fade" id="listaPagamento" role="tabpanel" aria-labelledby="listaPagamento-tab">
+                                <!-- Tabela de Lista de Formas de Pagamento -->
+                                
+                                <table class="table mt-3">
+                                  <thead>
+                                      <tr>
+                                          <th>ID</th>
+                                          <th>Forma pagamento</th>
+                                          <th>Ações</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for pagamento in pagamentos %}
+                                        <tr>
+                                            <td>{{ pagamento[0] }}</td>
+                                            <td>{{ pagamento[1] }}</td>
+                                            <td>
+                                                <a href="/delete/{{pagamento[0]}}" class="btn btn-danger btn-delete btn-sm">Deletar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                  </tbody>
+                              </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    <!-- Popper.js -->
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script>
+        // Adicione isso abaixo do seu script atual
+        $(document).ready(function() {
+            // Defina a TAB ativa para 'perfumes'
+            var activeTab = 'perfumes';
+    
+            // Mostra o conteúdo da seção clicada
+            mostrarConteudo(activeTab);
+        });
+    </script>
+
+    <script>
+        function mostrarConteudo(secao) {
+            // Oculta todos os conteúdos
+            document.getElementById('conteudo-perfumes').style.display = 'none';
+            document.getElementById('conteudo-clientes').style.display = 'none';
+            document.getElementById('conteudo-pedidos').style.display = 'none';
+            document.getElementById('conteudo-pagamento').style.display = 'none';
+
+            // Mostra o conteúdo da seção clicada
+            document.getElementById('conteudo-' + secao).style.display = 'block';
+        }
+        const btnDelete = document.querySelectorAll('.btn-delete');
+        if (btnDelete) {
+            const btnArray = Array.from(btnDelete);
+            btnArray.forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    if (!confirm('Deseja deletar?')) {
+                        e.preventDefault();
+                    } else {
+                        const idPagamento = btn.getAttribute('data-id');
+                        confirmarExclusao(idPagamento);
+                    }
+                });
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
